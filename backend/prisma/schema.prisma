@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  SUBSCRIBER
+  ADMIN
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  LAPSED
+}
+
+enum Plan {
+  MONTHLY
+  YEARLY
+}
+
+enum DrawStatus {
+  PENDING
+  SIMULATED
+  PUBLISHED
+}
+
+enum DrawMode {
+  RANDOM
+  ALGORITHMIC
+}
+
+enum MatchType {
+  FIVE
+  FOUR
+  THREE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id                   String             @id @default(cuid())
+  email                String             @unique
+  name                 String
+  passwordHash         String
+  role                 Role               @default(SUBSCRIBER)
+  subscriptionStatus   SubscriptionStatus @default(INACTIVE)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  subscriptionPlan     Plan?
+  renewalDate          DateTime?
+  charityId            String?
+  charityPercent       Int                @default(10)
+  refreshTokenHash     String?
+  scores               Score[]
+  winnings             Winner[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  charity              Charity?           @relation(fields: [charityId], references: [id])
+}
+
+model Score {
+  id        String   @id @default(cuid())
+  userId    String
+  score     Int // 1–45 (Stableford)
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date]) // No duplicate dates per user
+}
+
+model Draw {
+  id                String     @id @default(cuid())
+  month             DateTime   @db.Date
+  status            DrawStatus @default(PENDING)
+  drawNumbers       Int[]
+  drawMode          DrawMode   @default(RANDOM)
+  jackpotPool       Float      @default(0)
+  fourMatchPool     Float      @default(0)
+  threeMatchPool    Float      @default(0)
+  jackpotRolledOver Boolean    @default(false)
+  rolledOverAmount  Float      @default(0)
+  winners           Winner[]
+  createdAt         DateTime   @default(now())
+  publishedAt       DateTime?
+}
+
+model Winner {
+  id          String        @id @default(cuid())
+  userId      String
+  drawId      String
+  matchType   MatchType
+  prizeAmount Float
+  proofUrl    String?
+  status      PaymentStatus @default(PENDING)
+  adminNote   String?
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  draw        Draw          @relation(fields: [drawId], references: [id])
+}
+
+model Charity {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  mission     String         @default("")
+  imageUrls   String[]
+  isFeatured  Boolean        @default(false)
+  category    String         @default("General")
+  website     String?
+  events      CharityEvent[]
+  users       User[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model CharityEvent {
+  id          String   @id @default(cuid())
+  charityId   String
+  title       String
+  description String   @default("")
+  date        DateTime
+  location    String   @default("")
+  charity     Charity  @relation(fields: [charityId], references: [id], onDelete: Cascade)
+}
