@@ -44,7 +44,7 @@ export function Login() {
       <div className="relative hidden lg:flex flex-col justify-between w-1/2 overflow-hidden bg-gradient-hero p-12">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1530028828-25e9ac4f7536?w=1600&auto=format&fit=crop)' }}
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1592919505780-303950717480?w=1600&auto=format&fit=crop)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest via-forest/90 to-forest/70" />
         <Link to="/" className="relative flex items-center gap-2.5">
