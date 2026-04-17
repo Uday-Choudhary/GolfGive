@@ -13,8 +13,7 @@ async function main() {
     create: {
       id: 'charity-1',
       name: 'Fairways for Youth',
-      description:
-        'Providing underprivileged youth access to golf coaching, equipment, and community through the sport we love.',
+      description: 'Providing underprivileged youth access to golf coaching, equipment, and community through the sport we love.',
       mission: 'Every child deserves a chance to experience the joy of golf and the values it teaches.',
       imageUrls: [
         'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800',
@@ -25,18 +24,9 @@ async function main() {
       website: 'https://fairwaysforyouth.org',
       events: {
         create: [
-          {
-            title: 'Junior Open Day',
-            description: 'Free coaching sessions for ages 8–16 at local clubs',
-            date: new Date('2026-05-15'),
-            location: 'Wentworth Golf Club',
-          },
-          {
-            title: 'Charity Scramble',
-            description: 'Annual fundraising tournament in aid of youth programmes',
-            date: new Date('2026-06-20'),
-            location: 'Royal Birkdale',
-          },
+          { title: 'Junior Open Day', description: 'Free coaching sessions for ages 8–16', date: new Date('2026-05-15'), location: 'Wentworth Golf Club' },
+          { title: 'Charity Scramble', description: 'Annual fundraising tournament', date: new Date('2026-06-20'), location: 'Royal Birkdale' },
+          { title: 'Schools Golf Challenge', description: 'Inter-school golf competition', date: new Date('2026-07-08'), location: 'St Andrews' },
         ],
       },
     },
@@ -48,24 +38,19 @@ async function main() {
     create: {
       id: 'charity-2',
       name: 'Green Heart Foundation',
-      description:
-        'Restoring natural habitats adjacent to golf courses, making every round a vote for our planet.',
+      description: 'Restoring natural habitats adjacent to golf courses, making every round a vote for our planet.',
       mission: 'Golf courses can be engines of environmental restoration when managed with purpose.',
       imageUrls: [
         'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800',
         'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800',
       ],
-      isFeatured: false,
+      isFeatured: true,
       category: 'Environment',
       website: 'https://greenheartfoundation.org',
       events: {
         create: [
-          {
-            title: 'Tree Planting Day',
-            description: 'Community tree planting at golf course perimeters',
-            date: new Date('2026-04-22'),
-            location: 'Sunningdale Golf Club',
-          },
+          { title: 'Tree Planting Day', description: 'Community tree planting at golf course perimeters', date: new Date('2026-04-22'), location: 'Sunningdale Golf Club' },
+          { title: 'Wildlife Survey Walk', description: 'Guided nature walk and bird spotting', date: new Date('2026-05-30'), location: 'Muirfield' },
         ],
       },
     },
@@ -77,8 +62,7 @@ async function main() {
     create: {
       id: 'charity-3',
       name: 'Veterans on the Fairway',
-      description:
-        'Using golf as therapy and community for veterans — proven to reduce isolation and improve mental wellbeing.',
+      description: 'Using golf as therapy and community for veterans — proven to reduce isolation and improve mental wellbeing.',
       mission: 'Golf heals. We bring veterans to the course and let the sport do the rest.',
       imageUrls: [
         'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
@@ -89,12 +73,28 @@ async function main() {
       website: 'https://veteransfairway.org',
       events: {
         create: [
-          {
-            title: "Veterans' Captain's Day",
-            description: 'Annual golf day for veterans and their families',
-            date: new Date('2026-07-10'),
-            location: 'Gleneagles',
-          },
+          { title: "Veterans' Captain's Day", description: 'Annual golf day for veterans and their families', date: new Date('2026-07-10'), location: 'Gleneagles' },
+          { title: 'Remembrance Cup', description: 'Golf tournament in honour of fallen servicemen', date: new Date('2026-11-11'), location: 'Royal Lytham' },
+        ],
+      },
+    },
+  })
+
+  const charity4 = await prisma.charity.upsert({
+    where: { id: 'charity-4' },
+    update: {},
+    create: {
+      id: 'charity-4',
+      name: 'Swing Against Cancer',
+      description: 'Raising funds for cancer research through charity golf events across the UK and Ireland.',
+      mission: 'Every birdie matters. Every putt counts. Swing for a cure.',
+      imageUrls: ['https://images.unsplash.com/photo-1576158114254-3ba81558b87d?w=800'],
+      isFeatured: true,
+      category: 'Health',
+      website: 'https://swingagainstcancer.org',
+      events: {
+        create: [
+          { title: 'Pink Ribbon Open', description: 'Annual charity tournament raising funds for breast cancer research', date: new Date('2026-10-01'), location: 'Carnoustie' },
         ],
       },
     },
@@ -116,47 +116,76 @@ async function main() {
     },
   })
 
-  // ── Demo Subscriber ────────────────────────────────────────────────────────
-  const demoHash = await bcrypt.hash('Demo@1234', 12)
-  const demoUser = await prisma.user.upsert({
-    where: { email: 'demo@golfgive.com' },
-    update: {},
-    create: {
-      email: 'demo@golfgive.com',
-      name: 'Alex Johnson',
-      passwordHash: demoHash,
-      role: 'SUBSCRIBER',
-      subscriptionStatus: 'ACTIVE',
-      subscriptionPlan: 'MONTHLY',
-      renewalDate: new Date('2026-05-17'),
-      charityId: charity1.id,
-      charityPercent: 15,
-    },
-  })
-
-  // Demo scores
-  const scoreDates = [
-    new Date('2026-04-10'),
-    new Date('2026-04-05'),
-    new Date('2026-03-28'),
-    new Date('2026-03-20'),
-    new Date('2026-03-12'),
+  // ── Demo Users ────────────────────────────────────────────────────────────
+  const users = [
+    { email: 'demo@golfgive.com', name: 'Alex Johnson', password: 'Demo@1234', charity: charity1.id, plan: 'MONTHLY', percent: 15, renewal: '2026-05-17' },
+    { email: 'sarah.m@golfgive.com', name: 'Sarah Mitchell', password: 'Demo@1234', charity: charity2.id, plan: 'YEARLY', percent: 20, renewal: '2027-04-17' },
+    { email: 'james.k@golfgive.com', name: 'James Keller', password: 'Demo@1234', charity: charity3.id, plan: 'MONTHLY', percent: 10, renewal: '2026-05-10' },
+    { email: 'emma.d@golfgive.com', name: 'Emma Davies', password: 'Demo@1234', charity: charity4.id, plan: 'MONTHLY', percent: 25, renewal: '2026-05-22' },
+    { email: 'oliver.c@golfgive.com', name: 'Oliver Chen', password: 'Demo@1234', charity: charity1.id, plan: 'YEARLY', percent: 15, renewal: '2027-01-05' },
   ]
-  const scoreValues = [32, 28, 35, 27, 31]
 
-  for (let i = 0; i < 5; i++) {
-    await prisma.score.upsert({
-      where: { userId_date: { userId: demoUser.id, date: scoreDates[i] } },
+  const createdUsers: any[] = []
+  for (const u of users) {
+    const hash = await bcrypt.hash(u.password, 12)
+    const user = await prisma.user.upsert({
+      where: { email: u.email },
       update: {},
       create: {
-        userId: demoUser.id,
-        score: scoreValues[i],
-        date: scoreDates[i],
+        email: u.email,
+        name: u.name,
+        passwordHash: hash,
+        role: 'SUBSCRIBER',
+        subscriptionStatus: 'ACTIVE',
+        subscriptionPlan: u.plan as any,
+        renewalDate: new Date(u.renewal),
+        charityId: u.charity,
+        charityPercent: u.percent,
       },
     })
+    createdUsers.push(user)
+  }
+
+  // ── Scores for all demo users ─────────────────────────────────────────────
+  const scoreData = [
+    [32, 28, 35, 27, 31, 29, 33, 26, 30, 34],
+    [25, 30, 22, 28, 24, 26, 29, 23, 27, 31],
+    [38, 42, 36, 40, 37, 39, 41, 35, 38, 43],
+    [29, 31, 27, 33, 30, 28, 32, 26, 29, 34],
+    [22, 24, 20, 26, 23, 21, 25, 19, 22, 27],
+  ]
+
+  for (let ui = 0; ui < createdUsers.length; ui++) {
+    for (let si = 0; si < 10; si++) {
+      const date = new Date()
+      date.setDate(date.getDate() - si * 7)
+      date.setHours(0, 0, 0, 0)
+      await prisma.score.upsert({
+        where: { userId_date: { userId: createdUsers[ui].id, date } },
+        update: {},
+        create: { userId: createdUsers[ui].id, score: scoreData[ui][si], date },
+      })
+    }
   }
 
   // ── Sample Draws ───────────────────────────────────────────────────────────
+  await prisma.draw.upsert({
+    where: { id: 'draw-feb-2026' },
+    update: {},
+    create: {
+      id: 'draw-feb-2026',
+      month: new Date('2026-02-01'),
+      status: 'PUBLISHED',
+      drawNumbers: [3, 11, 24, 33, 42],
+      drawMode: 'ALGORITHMIC',
+      jackpotPool: 3800,
+      fourMatchPool: 2100,
+      threeMatchPool: 1400,
+      jackpotRolledOver: false,
+      publishedAt: new Date('2026-02-28'),
+    },
+  })
+
   await prisma.draw.upsert({
     where: { id: 'draw-march-2026' },
     update: {},
@@ -192,9 +221,10 @@ async function main() {
   })
 
   console.log('✅ Seed complete!')
-  console.log('   Admin:      admin@golfgive.com  /  Admin@1234')
-  console.log('   Subscriber: demo@golfgive.com   /  Demo@1234')
-  console.log(`   Charities:  ${charity1.name}, ${charity2.name}, ${charity3.name}`)
+  console.log('   Admin:       admin@golfgive.com   /  Admin@1234')
+  console.log('   Demo User:   demo@golfgive.com    /  Demo@1234')
+  console.log(`   + ${users.length - 1} additional demo subscribers seeded`)
+  console.log(`   Charities: ${[charity1, charity2, charity3, charity4].map(c => c.name).join(', ')}`)
 }
 
 main()
