@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ShieldCheck, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/hooks/useAuth'
@@ -8,11 +8,35 @@ import { loginSchema, LoginFormData } from '@/types'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
+const DEMO_CREDENTIALS = [
+  {
+    role: 'Admin',
+    email: 'admin@golfgive.com',
+    password: 'Admin@1234',
+    icon: ShieldCheck,
+    color: 'bg-forest/10 border-forest/30 text-forest hover:bg-forest/20',
+    badge: 'bg-forest text-white',
+  },
+  {
+    role: 'User',
+    email: 'demo@golfgive.com',
+    password: 'Demo@1234',
+    icon: User,
+    color: 'bg-gold/10 border-gold/30 text-gold hover:bg-gold/20',
+    badge: 'bg-gold text-white',
+  },
+]
+
 export function Login() {
   const { login } = useAuth()
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
+
+  const fillCredentials = (email: string, password: string) => {
+    setValue('email', email, { shouldValidate: true })
+    setValue('password', password, { shouldValidate: true })
+  }
 
   return (
     <div className="min-h-screen bg-off-white flex">
@@ -66,57 +90,79 @@ export function Login() {
             </Link>
           </div>
 
-          <div className="rounded-lg border border-stone bg-white p-6 shadow-card md:p-8">
-          <div className="hidden lg:flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 rounded-full bg-gradient-hero flex items-center justify-center">
-              <span className="text-white text-xs font-bold font-mono">GG</span>
+          <div className="rounded-[24px] border border-stone bg-white p-6 shadow-card md:p-8">
+            <div className="hidden lg:flex items-center gap-2 mb-8">
+              <div className="w-8 h-8 rounded-full bg-gradient-hero flex items-center justify-center">
+                <span className="text-white text-xs font-bold font-mono">GG</span>
+              </div>
+              <span className="font-sans font-bold text-base uppercase tracking-widest text-forest">GolfGive</span>
             </div>
-            <span className="font-sans font-bold text-base uppercase tracking-widest text-forest">GolfGive</span>
-          </div>
 
-          <h1 className="font-heading text-3xl text-forest mb-1">Sign In</h1>
-          <p className="font-sans text-slate text-sm mb-8">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-gold hover:underline">Sign up</Link>
-          </p>
-
-          <form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-5">
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="you@example.com"
-              {...register('email')}
-              error={errors.email?.message}
-            />
-            <Input
-              label="Password"
-              type="password"
-              placeholder="Your password"
-              {...register('password')}
-              error={errors.password?.message}
-            />
-
-            {login.error && (
-              <p className="text-sm text-red-500 font-sans">
-                {(login.error as any)?.response?.data?.error || 'Login failed. Please try again.'}
-              </p>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full justify-center"
-              isLoading={login.isPending}
-              size="lg"
-            >
-              Sign In
-            </Button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-stone text-center">
-            <p className="text-xs text-slate font-sans">
-              Demo credentials: <code className="bg-stone px-1 py-0.5 rounded text-xs">demo@golfgive.com</code> / <code className="bg-stone px-1 py-0.5 rounded text-xs">Demo@1234</code>
+            <h1 className="font-heading text-3xl text-forest mb-1">Sign In</h1>
+            <p className="font-sans text-slate text-sm mb-6">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-gold hover:underline">Sign up</Link>
             </p>
-          </div>
+
+            {/* Quick-fill demo buttons */}
+            <div className="mb-6 p-4 rounded-2xl bg-off-white border border-stone">
+              <p className="text-[10px] uppercase tracking-widest font-sans text-slate font-semibold mb-3">
+                Quick Demo Access
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {DEMO_CREDENTIALS.map(({ role, email, password, icon: Icon, color, badge }) => (
+                  <button
+                    key={role}
+                    type="button"
+                    onClick={() => fillCredentials(email, password)}
+                    className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all text-left ${color}`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${badge}`}>
+                      <Icon className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-sans font-bold text-xs">{role}</p>
+                      <p className="font-sans text-[10px] opacity-70 truncate">{email}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] font-sans text-slate/60 mt-2 text-center">
+                Click a role to auto-fill credentials
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-5">
+              <Input
+                label="Email Address"
+                type="email"
+                placeholder="you@example.com"
+                {...register('email')}
+                error={errors.email?.message}
+              />
+              <Input
+                label="Password"
+                type="password"
+                placeholder="Your password"
+                {...register('password')}
+                error={errors.password?.message}
+              />
+
+              {login.error && (
+                <p className="text-sm text-red-500 font-sans">
+                  {(login.error as any)?.response?.data?.error || 'Login failed. Please try again.'}
+                </p>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full justify-center"
+                isLoading={login.isPending}
+                size="lg"
+              >
+                Sign In →
+              </Button>
+            </form>
           </div>
         </motion.div>
       </div>
