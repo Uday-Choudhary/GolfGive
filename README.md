@@ -4,8 +4,7 @@ GolfGive is a subscription-based golf platform that combines competitive play, t
 
 The platform is built as a production-grade full-stack application with a React frontend, an Express REST API, a PostgreSQL database managed through Prisma, and Stripe handling all subscription and payment logic.
 
-**Live Application:** https://golf-give-six.vercel.app  
-**Backend API:** https://golfgive-klzs.onrender.com  
+**Live Application:** https://golf-give-six.vercel.app
 **Repository:** https://github.com/Uday-Choudhary/GolfGive
 
 ---
@@ -54,18 +53,18 @@ Winners are notified and must upload proof of their scores within seven days to 
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS, Framer Motion |
-| State Management | Zustand, TanStack Query |
-| Forms and Validation | React Hook Form, Zod |
-| Backend | Node.js, Express, TypeScript |
-| Database | PostgreSQL (Neon serverless) via Prisma ORM |
-| Authentication | JWT access tokens, HTTP-only refresh token cookies |
-| Payments | Stripe Checkout + Webhooks |
-| Email | Resend |
-| Frontend Hosting | Vercel |
-| Backend Hosting | Render |
+| Layer                | Technology                                              |
+| -------------------- | ------------------------------------------------------- |
+| Frontend             | React 19, TypeScript, Vite, Tailwind CSS, Framer Motion |
+| State Management     | Zustand, TanStack Query                                 |
+| Forms and Validation | React Hook Form, Zod                                    |
+| Backend              | Node.js, Express, TypeScript                            |
+| Database             | PostgreSQL (Neon serverless) via Prisma ORM             |
+| Authentication       | JWT access tokens, HTTP-only refresh token cookies      |
+| Payments             | Stripe Checkout + Webhooks                              |
+| Email                | Resend                                                  |
+| Frontend Hosting     | Vercel                                                  |
+| Backend Hosting      | Render                                                  |
 
 ---
 
@@ -133,43 +132,48 @@ The schema is built around six core models:
 ## API Reference
 
 ### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/register` | Create account |
-| POST | `/api/auth/login` | Sign in |
-| POST | `/api/auth/refresh` | Refresh access token |
-| POST | `/api/auth/logout` | Invalidate refresh token |
-| GET | `/api/auth/me` | Get current user profile |
+
+| Method | Endpoint               | Description              |
+| ------ | ---------------------- | ------------------------ |
+| POST   | `/api/auth/register` | Create account           |
+| POST   | `/api/auth/login`    | Sign in                  |
+| POST   | `/api/auth/refresh`  | Refresh access token     |
+| POST   | `/api/auth/logout`   | Invalidate refresh token |
+| GET    | `/api/auth/me`       | Get current user profile |
 
 ### Subscription
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/subscription/checkout` | Create Stripe Checkout session |
-| POST | `/api/subscription/confirm` | Confirm checkout after redirect |
-| POST | `/api/subscription/webhook` | Stripe webhook handler |
-| DELETE | `/api/subscription` | Cancel subscription |
+
+| Method | Endpoint                       | Description                     |
+| ------ | ------------------------------ | ------------------------------- |
+| POST   | `/api/subscription/checkout` | Create Stripe Checkout session  |
+| POST   | `/api/subscription/confirm`  | Confirm checkout after redirect |
+| POST   | `/api/subscription/webhook`  | Stripe webhook handler          |
+| DELETE | `/api/subscription`          | Cancel subscription             |
 
 ### Scores
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/scores` | Get current user's scores |
-| POST | `/api/scores` | Submit a new score |
-| DELETE | `/api/scores/:id` | Remove a score |
+
+| Method | Endpoint            | Description               |
+| ------ | ------------------- | ------------------------- |
+| GET    | `/api/scores`     | Get current user's scores |
+| POST   | `/api/scores`     | Submit a new score        |
+| DELETE | `/api/scores/:id` | Remove a score            |
 
 ### Draws and Winners
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/draws` | List all published draws |
-| GET | `/api/winners/me` | Get current user's winning history |
+
+| Method | Endpoint            | Description                        |
+| ------ | ------------------- | ---------------------------------- |
+| GET    | `/api/draws`      | List all published draws           |
+| GET    | `/api/winners/me` | Get current user's winning history |
 
 ### Admin (requires `ADMIN` role)
-| Method | Endpoint | Description |
-|---|---|---|
-| GET/POST/PATCH/DELETE | `/api/admin/users` | User management |
-| GET/POST/PATCH | `/api/admin/draws` | Draw simulation and publishing |
-| GET/POST/PATCH/DELETE | `/api/admin/charities` | Charity management |
-| GET/PATCH | `/api/admin/winners` | Winner review and payout marking |
-| GET | `/api/admin/reports` | Revenue, charity, and draw analytics |
+
+| Method                | Endpoint                 | Description                          |
+| --------------------- | ------------------------ | ------------------------------------ |
+| GET/POST/PATCH/DELETE | `/api/admin/users`     | User management                      |
+| GET/POST/PATCH        | `/api/admin/draws`     | Draw simulation and publishing       |
+| GET/POST/PATCH/DELETE | `/api/admin/charities` | Charity management                   |
+| GET/PATCH             | `/api/admin/winners`   | Winner review and payout marking     |
+| GET                   | `/api/admin/reports`   | Revenue, charity, and draw analytics |
 
 ---
 
@@ -245,10 +249,10 @@ The application will be available at `http://localhost:5173`.
 
 ### Demo Credentials
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@golfgive.com | Admin@1234 |
-| Subscriber | demo@golfgive.com | Demo@1234 |
+| Role       | Email              | Password   |
+| ---------- | ------------------ | ---------- |
+| Admin      | admin@golfgive.com | Admin@1234 |
+| Subscriber | demo@golfgive.com  | Demo@1234  |
 
 These users and sample data (charities, scores, draws) are created by the seed script.
 
