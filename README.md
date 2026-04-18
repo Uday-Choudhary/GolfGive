@@ -29,6 +29,10 @@ The platform is built as a production-grade full-stack application with a React 
 
 <img src="./screenshots/UserCharity.png" alt="User Charity Selection" width="900" />
 
+**Stripe Subscription — Payment**
+
+<img src="./screenshots/StripePayment.png" alt="Stripe Subscription Payment" width="900" />
+
 **Admin Panel — Draw Engine**
 
 <img src="./screenshots/Admin-DrawEngine.png" alt="Admin Draw Engine" width="900" />
